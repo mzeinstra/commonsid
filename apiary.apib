@@ -1,0 +1,78 @@
+FORMAT: 1A
+HOST: http://www.commonsid.org
+
+# Hash Store
+Hash Store is a simple service to store hashes based on media files
+
+# Group Work
+
+## Work [/work]
+### Post a new work to the service [POST]
++ Request (application/json)
+
+        { "URI": "http://example.com/image.jpg", "Author", "John Snow", "License", "https://creativecommons.org/publicdomain/zero/1.0/" }
++ Response 200 (application/json)
+
+        {
+          "id": 03535231, "SHA256": "b241121..", "MD5" : "a21342b1..", "phash" : ["cb312..", "b42c21.."]
+        }
++ Response 201 (application/json)
+
+        {
+          "URI": "http://example.com/image.jpg", "Author", "John Snow", "License", "https://creativecommons.org/publicdomain/zero/1.0/"
+        }
++ Response 404 (application/json)
+
+        {
+            "message" : "Source unavailable"
+        }
+        
+# Group Hash retrievel
+
+## Hash retrieval list [/hash]
+### Get all hash methods [GET]
++ Response 200 (application/json)
+
+        {
+            ["sha0", "sha1", "sha2", "md5", "phash"]
+        }
+
+# Group Object Retrievel
+## Object Retrieval by hash [/hash/{method}/{hash}]
+
++ Parameters
+    + method (required, string, `sha1`) ... String `method` of the hash method that was used to create `hash`.
+    + hash (required, string, `ab324c53b..`) ... String `hash` with method `method`.
+
+### Get all provenance information [GET]
++ Response 200 (application/json)
+
+        {
+          "URI": "http://example.com/image.jpg", "Author", "John Snow", "License", "https://creativecommons.org/publicdomain/zero/1.0/"
+        }
++ Response 404 (application/json)
+
+        {
+            "message" : "No Object at this hash"
+        }
+
+# Group Attribution Retrievel
+## Object Retrieval by hash [/hash/{method}/{hash}/Attribution]
+
++ Parameters
+    + method (required, string, `sha1`) ... String `method` of the hash method that was used to create `hash`.
+    + hash (required, string, `ab324c53b..`) ... String `hash` with method `method`.
+
+### Get all provenance information [GET]
++ Response 200 (application/json)
+
+        {
+          Result ["URI": "http://example.com/image.jpg", "Author", "John Snow", "License", "https://creativecommons.org/publicdomain/zero/1.0/"]
+          Attribution ["HTML": "This work by John Snow is licensed under <a rel=license src="https://creativecommons.org/publicdomain/zero/1.0/>">CC0</a>", 
+                        "Plain text" : This work by John Snow is licensed under CC0, go to https://creativecommons.org/publicdomain/zero/1.0/ for a copy of the license"]
+        }
++ Response 404 (application/json)
+
+        {
+            "message" : "No Object at this hash"
+        }
