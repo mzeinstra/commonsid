@@ -4,6 +4,28 @@ HOST: http://www.commonsid.org
 # Hash Store
 Hash Store is a simple service to store provenance information based on the hashes of media files.
 
+# Group Home
+
+## Home [/]
+### Retrieve the entry point [GET]
++ Request (application/vnd.api+json)
+
++ Response 200 (application/vnd.api+json)
+
+        {
+            "links": {
+                "works": "http://www.commonsid.org/works"
+            }
+        }
+
++ Request (text/html)
+
++ Response 200 (text/html)
+
+        <ul>
+        <li><a href="http://www.commonsid.org/works">Works</a></li>
+        </ul>
+
 # Group Work
 
 ## Work [/work]
