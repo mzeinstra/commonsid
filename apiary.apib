@@ -64,13 +64,28 @@ Hash Store is a simple service to store provenance information based on the hash
     + hash (required, string, `ab324c53b..`) ... String `hash` with method `method`.
 
 ### Get all provenance information [GET]
++ Request (application/json)
+
 + Response 200 (application/json)
 
         {
-          Result ["URI": "http://example.com/image.jpg", "Author", "John Snow", "License", "https://creativecommons.org/publicdomain/zero/1.0/"]
-          Attribution ["HTML": "This work by John Snow is licensed under <a rel=license src="https://creativecommons.org/publicdomain/zero/1.0/>">CC0</a>", 
-                        "Plain text" : This work by John Snow is licensed under CC0, go to https://creativecommons.org/publicdomain/zero/1.0/ for a copy of the license"]
+          "result": {"URI": "http://example.com/image.jpg", "Author": "John Snow", "License": "https://creativecommons.org/publicdomain/zero/1.0/"}
         }
+        
++ Request (text/html)
+
++ Response 200 (text/html)
+
+        This work by John Snow is licensed under <a rel=license src="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>
+
++ Request (text/plain)
+
++ Response 200 (text/plain)
+
+        This work by John Snow is licensed under CC0, go to https://creativecommons.org/publicdomain/zero/1.0/ for a copy of the license
+
++ Request (*/*)
+
 + Response 404 (application/json)
 
         {
