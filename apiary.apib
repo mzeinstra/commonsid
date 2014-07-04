@@ -8,13 +8,21 @@ Hash Store is a simple service to store provenance information based on the hash
 
 ## Home [/]
 ### Retrieve the entry point [GET]
-+ Request (application/vnd.api+json)
++ Request (vnd.collection+json)
 
-+ Response 200 (application/vnd.api+json)
++ Response 200 (vnd.collection+json)
 
         {
-            "links": {
-                "works": "http://www.commonsid.org/works"
+            "collection": {
+                "version": "1.0",
+                "href": "http://www.commonsid.org/",
+                "links": [
+                    {
+                        "rel": "works",
+                        "href": "http://www.commonsid.org/works",
+                        "prompt" : "Works"
+                    }
+                ]
             }
         }
 
@@ -28,7 +36,101 @@ Hash Store is a simple service to store provenance information based on the hash
 
 # Group Work
 
-## Work [/work]
+## Works [/works]
+### Retrieve a list of works [GET]
++ Request (vnd.collection+json)
+
++ Response 200 (vnd.collection+json)
+
+        {
+            "collection": {
+                "version": "1.0",
+                "href": "http://www.commonsid.org/works",
+                "items": [
+                    {
+                        "href": "http://www.commonsid.org/works/03535231",
+                        "data": [
+                            {
+                                "name": "URI",
+                                "value": "http://example.com/image.jpg"
+                            },
+                            {
+                                "name": "Author",
+                                "value": "John Snow"
+                            },
+                            {
+                                "name": "License",
+                                "value": "https://creativecommons.org/publicdomain/zero/1.0/"
+                            },
+                            {
+                                "name": "SHA256",
+                                "value": "b241121.."
+                            },
+                            {
+                                "name": "MD5",
+                                "value": "a21342b1.."
+                            }
+                        ],
+                        "links": [
+                            {
+                                "rel": "attribution",
+                                "href": "http://www.commonsid.org/works/03535231/attribution",
+                                "prompt": "Attribution"
+                            }
+                        ]
+                    }
+                ],
+                "queries": [
+                    {
+                        "href": "http://www.commonsid.org/works",
+                        "rel": "search",
+                        "prompt": "Search for a Work",
+                        "data": [
+                            {
+                                "name": "URI",
+                                "value": ""
+                            },
+                            {
+                                "name": "Author",
+                                "value": ""
+                            },
+                            {
+                                "name": "License",
+                                "value": ""
+                            },
+                            {
+                                "name": "SHA256",
+                                "value": ""
+                            },
+                            {
+                                "name": "MD5",
+                                "value": ""
+                            }
+                        ]
+                    }
+                ],
+                "template": {
+                    "data": [
+                        {
+                            "name": "URI",
+                            "value": "",
+                            "prompt": "URL of the Work"
+                        },
+                        {
+                            "name": "Author",
+                            "value": "",
+                            "prompt": "Author of the Work"
+                        },
+                        {
+                            "name": "License",
+                            "value": "",
+                            "prompt": "Creative Commons License"
+                        }
+                    ]
+                }
+            }
+        }
+        
 ### Post a new work to the service [POST]
 + Request (application/json)
 
