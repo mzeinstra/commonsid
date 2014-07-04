@@ -137,23 +137,94 @@ Hash Store is a simple service to store provenance information based on the hash
         }
         
 ### Post a new work to the service [POST]
-+ Request (application/json)
-
-        { "URI": "http://example.com/image.jpg", "Author", "John Snow", "License", "https://creativecommons.org/publicdomain/zero/1.0/" }
-+ Response 200 (application/json)
++ Request (vnd.collection+json)
 
         {
-          "id": 03535231, "SHA256": "b241121..", "MD5" : "a21342b1..", "phash" : ["cb312..", "b42c21.."]
+            "template": {
+                "data": [
+                    {
+                        "name": "URI",
+                        "value": "http://example.com/image.jpg"
+                    },
+                    {
+                        "name": "Author",
+                        "value": "John Snow"
+                    },
+                    {
+                        "name": "License",
+                        "value": "https://creativecommons.org/publicdomain/zero/1.0/"
+                    }
+                ]
+            }
         }
-+ Response 201 (application/json)
+        
++ Response 201 (vnd.collection+json)
+    + Headers
+    
+            Location: http://www.commonsid.org/works/03535231
+            Content-Location: http://www.commonsid.org/works/03535231
+
+    + Body
+    
+            {
+                "collection": {
+                    "version": "1.0",
+                    "href": "http://www.commonsid.org/works",
+                    "items": [
+                        {
+                            "href": "http://www.commonsid.org/works/03535231",
+                            "data": [
+                                {
+                                    "name": "uri",
+                                    "value": "http://example.com/image.jpg",
+                                    "prompt": "URI"
+                                },
+                                {
+                                    "name": "author",
+                                    "value": "John Snow",
+                                    "prompt": "Author"
+                                },
+                                {
+                                    "name": "license",
+                                    "value": "https://creativecommons.org/publicdomain/zero/1.0/",
+                                    "prompt": "License"
+                                },
+                                {
+                                    "name": "sha256",
+                                    "value": "b241121..",
+                                    "prompt": "SHA256"
+                                },
+                                {
+                                    "name": "md5",
+                                    "value": "a21342b1..",
+                                    "prompt": "MD5"
+                                }
+                            ],
+                            "links": [
+                                {
+                                    "rel": "attribution",
+                                    "href": "http://www.commonsid.org/works/03535231/attribution",
+                                    "prompt": "Attribution"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+
+
++ Response 400 (application/json)
 
         {
-          "URI": "http://example.com/image.jpg", "Author", "John Snow", "License", "https://creativecommons.org/publicdomain/zero/1.0/"
-        }
-+ Response 404 (application/json)
-
-        {
-            "message" : "Source unavailable"
+            "collection": {
+                "version": "1.0",
+                "href": "http://www.commonsid.org/works",
+                "error": {
+                    "title": "Source Unavailable",
+                    "code": "400",
+                    "message": "The specified URI is unreachable or does not exist."
+                }
+            }
         }
         
 # Group Hash retrievel
