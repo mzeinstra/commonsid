@@ -19,7 +19,7 @@ Hash Store is a simple service to store provenance information based on the hash
                 "links": [
                     {
                         "rel": "works",
-                        "href": "http://www.commonsid.org/works",
+                        "href": "http://www.commonsid.org/works/",
                         "prompt" : "Works"
                     }
                 ]
@@ -45,7 +45,7 @@ Hash Store is a simple service to store provenance information based on the hash
         {
             "collection": {
                 "version": "1.0",
-                "href": "http://www.commonsid.org/works",
+                "href": "http://www.commonsid.org/works/",
                 "items": [
                     {
                         "href": "http://www.commonsid.org/works/03535231",
@@ -87,7 +87,7 @@ Hash Store is a simple service to store provenance information based on the hash
                 ],
                 "queries": [
                     {
-                        "href": "http://www.commonsid.org/works",
+                        "href": "http://www.commonsid.org/works/",
                         "rel": "search",
                         "prompt": "Search for a Work",
                         "data": [
@@ -135,7 +135,7 @@ Hash Store is a simple service to store provenance information based on the hash
                 }
             }
         }
-        
+
 ### Post a new work to the service [POST]
 + Request (vnd.collection+json)
 
@@ -169,7 +169,7 @@ Hash Store is a simple service to store provenance information based on the hash
             {
                 "collection": {
                     "version": "1.0",
-                    "href": "http://www.commonsid.org/works",
+                    "href": "http://www.commonsid.org/works/",
                     "items": [
                         {
                             "href": "http://www.commonsid.org/works/03535231",
@@ -211,14 +211,15 @@ Hash Store is a simple service to store provenance information based on the hash
                     ]
                 }
             }
-
+            
++ Request (*/*)
 
 + Response 400 (vnd.collection+json)
 
         {
             "collection": {
                 "version": "1.0",
-                "href": "http://www.commonsid.org/works",
+                "href": "http://www.commonsid.org/works/",
                 "error": {
                     "title": "Source Unavailable",
                     "code": "400",
@@ -229,35 +230,128 @@ Hash Store is a simple service to store provenance information based on the hash
         
 # Group Hash retrievel
 
-## Hash retrieval list [/hash]
+## Hash retrieval list [/hashes]
 ### Get all hash methods [GET]
-+ Response 200 (application/json)
++ Request (vnd.collection+json)
+
++ Response 200 (vnd.collection+json)
 
         {
-            ["sha0", "sha1", "sha2", "md5", "phash"]
+            "collection": {
+                "version": "1.0",
+                "href": "http://www.commonsid.org/hashes/",
+                "queries": [
+                    {
+                        "encoding": "uri-template",
+                        "href": "http://www.commonsid.org/hashes/sha1/{hash}",
+                        "rel": "sha1",
+                        "prompt": "Find a work using its SHA-1 Hash",
+                        "data": [
+                            {
+                                "name": "hash",
+                                "value": []
+                            }
+                        ]
+                    },
+                    {
+                        "encoding": "uri-template",
+                        "href": "http://www.commonsid.org/hashes/md5/{hash}",
+                        "rel": "md5",
+                        "prompt": "Find a work using its MD5 Hash",
+                        "data": [
+                            {
+                                "name": "hash",
+                                "value": []
+                            }
+                        ]
+                    }
+                ]
+            }
         }
 
 # Group Object Retrievel
-## Object Retrieval by hash [/hash/{method}/{hash}]
+## Object Retrieval by hash [/hashes/{method}/{hash}]
 
 + Parameters
     + method (required, string, `sha1`) ... String `method` of the hash method that was used to create `hash`.
     + hash (required, string, `ab324c53b..`) ... String `hash` with method `method`.
 
 ### Get all provenance information [GET]
++ Request (application/json)
+
 + Response 200 (application/json)
 
         {
           "URI": "http://example.com/image.jpg", "Author", "John Snow", "License", "https://creativecommons.org/publicdomain/zero/1.0/"
         }
-+ Response 404 (application/json)
++ Request (vnd.collection+json)
+
++ Response 200 (vnd.collection+json)
 
         {
-            "message" : "No Object at this hash"
+            "collection": {
+                "version": "1.0",
+                "href": "http://www.commonsid.org/hashes/",
+                "items": [
+                    {
+                        "href": "http://www.commonsid.org/hashes/sha1/ab324c53b..",
+                        "data": [
+                            {
+                                "name": "uri",
+                                "value": "http://example.com/image.jpg",
+                                "prompt": "URI"
+                            },
+                            {
+                                "name": "author",
+                                "value": "John Snow",
+                                "prompt": "Author"
+                            },
+                            {
+                                "name": "license",
+                                "value": "https://creativecommons.org/publicdomain/zero/1.0/",
+                                "prompt": "License"
+                            },
+                            {
+                                "name": "sha256",
+                                "value": "b241121..",
+                                "prompt": "SHA256"
+                            },
+                            {
+                                "name": "md5",
+                                "value": "a21342b1..",
+                                "prompt": "MD5"
+                            }
+                        ],
+                        "links": [
+                            {
+                                "rel": "attribution",
+                                "href": "http://www.commonsid.org/hashes/sha1/ab324c53b../attribution",
+                                "prompt": "Attribution"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+        
++ Request (*/*)
+        
++ Response 404 (vnd.collection+json)
+
+        {
+            "collection": {
+                "version": "1.0",
+                "href": "http://www.commonsid.org/hashes/sha1/ab324c53b..",
+                "error": {
+                    "title": "No Object at this Hash",
+                    "code": "404",
+                    "message": "The specified hash does not match any object."
+                }
+            }
         }
 
 # Group Attribution Retrievel
-## Object Retrieval by hash [/hash/{method}/{hash}/Attribution]
+## Object Retrieval by hash [/hash/{method}/{hash}/attribution]
 
 + Parameters
     + method (required, string, `sha1`) ... String `method` of the hash method that was used to create `hash`.
@@ -270,6 +364,39 @@ Hash Store is a simple service to store provenance information based on the hash
 
         {
           "result": {"URI": "http://example.com/image.jpg", "Author": "John Snow", "License": "https://creativecommons.org/publicdomain/zero/1.0/"}
+        }
+  
++ Request (vnd.collection+json)
+
++ Response 200 (vnd.collection+json)
+
+        {
+            "collection": {
+                "version": "1.0",
+                "href": "http://www.commonsid.org/hashes/",
+                "items": [
+                    {
+                        "href": "http://www.commonsid.org/hashes/sha1/ab324c53b../attribution",
+                        "data": [
+                            {
+                                "name": "uri",
+                                "value": "http://example.com/image.jpg",
+                                "prompt": "URI"
+                            },
+                            {
+                                "name": "author",
+                                "value": "John Snow",
+                                "prompt": "Author"
+                            },
+                            {
+                                "name": "license",
+                                "value": "https://creativecommons.org/publicdomain/zero/1.0/",
+                                "prompt": "License"
+                            }
+                        ]
+                    }
+                ]
+            }
         }
         
 + Request (text/html)
@@ -286,8 +413,16 @@ Hash Store is a simple service to store provenance information based on the hash
 
 + Request (*/*)
 
-+ Response 404 (application/json)
++ Response 404 (vnd.collection+json)
 
         {
-            "message" : "No Object at this hash"
+            "collection": {
+                "version": "1.0",
+                "href": "http://www.commonsid.org/hashes/sha1/ab324c53b../attribution",
+                "error": {
+                    "title": "No Object at this Hash",
+                    "code": "404",
+                    "message": "The specified hash does not match any object."
+                }
+            }
         }
